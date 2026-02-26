@@ -98,6 +98,7 @@ app.post('/api/admin/webhooks', async (req, res) => {
 const indexingService = require('./services/indexingService');
 const adminService = require('./services/adminService');
 const vestingService = require('./services/vestingService');
+const merkleVaultService = require('./services/merkleVaultService');
 const discordBotService = require('./services/discordBotService');
 const cacheService = require('./services/cacheService');
 const tvlService = require('./services/tvlService');
@@ -105,6 +106,7 @@ const vaultExportService = require('./services/vaultExportService');
 const authService = require('./services/authService');
 const notificationService = require('./services/notificationService');
 const pdfService = require('./services/pdfService');
+const VaultService = require('./services/vaultService');
 const monthlyReportJob = require('./jobs/monthlyReportJob');
 const { VaultReconciliationJob } = require('./jobs/vaultReconciliationJob');
 
@@ -264,6 +266,28 @@ app.use('/webhooks', webhooksRoutes);
 // Mount organization routes
 app.use('/api/org', organizationRoutes);
 
+// Merkle vesting airdrops (Issue #51)
+app.post('/api/merkle-vault/build-tree', async (req, res) => {
+  try {
+    const { entries } = req.body;
+    if (!Array.isArray(entries) || entries.length === 0) {
+      return res.status(400).json({ success: false, error: 'entries array required' });
+    }
+    const data = merkleVaultService.buildMerkleVaultData(entries);
+    res.json({
+      success: true,
+      data: {
+        rootHash: data.rootHash,
+        totalAmount: data.totalAmount,
+        proofsByIndex: data.proofsByIndex,
+      },
+    });
+  } catch (error) {
+    console.error('Error building Merkle tree:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.post('/api/claims', claimRateLimiter, async (req, res) => {
   try {
     const claim = await indexingService.processClaim(req.body);
@@ -354,7 +378,6 @@ app.post('/api/admin/create', async (req, res) => {
       success: false,
       error: error.message
     });
-    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -573,6 +596,35 @@ app.get('/api/vaults/:id/export', async (req, res) => {
       res.status(500).json({ success: false, error: error.message });
     } else {
       res.destroy(error);
+    }
+  }
+});
+
+// Balance query endpoint
+app.get('/api/vaults/:id/balance', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const vaultService = new VaultService();
+    
+    const balanceInfo = await vaultService.queryBalanceInfo(id);
+    
+    res.json({
+      success: true,
+      data: balanceInfo.toJSON()
+    });
+  } catch (error) {
+    console.error('Error querying vault balance:', error);
+    
+    if (error.message && error.message.includes('not found')) {
+      res.status(404).json({
+        success: false,
+        error: error.message
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
     }
   }
 });
