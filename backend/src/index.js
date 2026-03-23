@@ -105,6 +105,7 @@ const tvlService = require('./services/tvlService');
 const vaultExportService = require('./services/vaultExportService');
 const authService = require('./services/authService');
 const notificationService = require('./services/notificationService');
+const liquidityMonitorService = require('./services/liquidityMonitorService');
 const pdfService = require('./services/pdfService');
 const VaultService = require('./services/vaultService');
 const monthlyReportJob = require('./jobs/monthlyReportJob');
@@ -929,6 +930,14 @@ const startServer = async () => {
     } catch (notificationError) {
       console.error('Failed to initialize Notification Service:', notificationError);
       console.log('Continuing without notification cron job...');
+    }
+
+    try {
+      liquidityMonitorService.start();
+      console.log('Liquidity monitor service started successfully.');
+    } catch (liquidityMonitorError) {
+      console.error('Failed to initialize Liquidity Monitor Service:', liquidityMonitorError);
+      console.log('Continuing without liquidity monitor...');
     }
     
     // Start the HTTP server

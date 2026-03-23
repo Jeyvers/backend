@@ -9,6 +9,7 @@ const Organization = require('./organization');
 const Notification = require('./notification');
 const RefreshToken = require('./refreshToken');
 const DeviceToken = require('./deviceToken');
+const VaultLiquidityAlert = require('./vaultLiquidityAlert');
 
 const { Token, initTokenModel } = require('./token');
 const { OrganizationWebhook, initOrganizationWebhookModel } = require('./organizationWebhook');
@@ -29,6 +30,7 @@ const models = {
   RefreshToken,
   Notification,
   DeviceToken,
+  VaultLiquidityAlert,
   Token,
   OrganizationWebhook,
   sequelize,
