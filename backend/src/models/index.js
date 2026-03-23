@@ -17,6 +17,10 @@ const Organization = require('./organization');
 const Notification = require('./notification');
 
 const RefreshToken = require('./refreshToken');
+const RevocationProposal = require('./revocationProposal');
+const RevocationSignature = require('./revocationSignature');
+const MultiSigConfig = require('./multiSigConfig');
+const DeviceToken = require('./deviceToken');
 
 
 
@@ -51,14 +55,19 @@ const models = {
   Beneficiary,
 
   Organization,
+  RefreshToken,
+  RevocationProposal,
+  RevocationSignature,
+  MultiSigConfig,
+  Token,
+  OrganizationWebhook,
 
 
 
   RefreshToken,
   Notification,
   DeviceToken,
-  Token,
-  OrganizationWebhook,
+
   sequelize,
 
 };
