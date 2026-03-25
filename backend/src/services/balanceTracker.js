@@ -7,6 +7,7 @@
 
 const axios = require('axios');
 const { BalanceQueryFailedError } = require('../errors/VaultErrors');
+const { executeRpcWithRetry } = require('../../../rpc-retry');
 
 class BalanceTracker {
   /**
@@ -29,17 +30,18 @@ class BalanceTracker {
    */
   async getActualBalance(tokenAddress, vaultAddress) {
     try {
-      // Make RPC call to query balance
-      // This uses the Soroban RPC simulateTransaction endpoint
-      const response = await axios.post(this.rpcUrl, {
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'simulateTransaction',
-        params: {
-          transaction: this._buildBalanceQueryTransaction(tokenAddress, vaultAddress)
-        }
-      });
+      const rpcCall = () =>
+        axios.post(this.rpcUrl, {
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'simulateTransaction',
+          params: {
+            transaction: this._buildBalanceQueryTransaction(tokenAddress, vaultAddress),
+          },
+        });
 
+      const response = await executeRpcWithRetry(rpcCall, `getActualBalance for ${vaultAddress}`);
+      
       if (response.data.error) {
         throw new Error(response.data.error.message || 'RPC error');
       }
