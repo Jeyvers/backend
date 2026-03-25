@@ -267,6 +267,9 @@ app.use('/webhooks', webhooksRoutes);
 // Mount organization routes
 app.use('/api/org', organizationRoutes);
 
+// Mount analytics routes
+app.use('/api', analyticsRoutes);
+
 // ── Vesting Routes ────────────────────────────────────────────────────────────
 
 // POST /api/vaults - Create a new vault
