@@ -397,7 +397,7 @@ app.use("/api/registry", vaultRegistryRoutes);
 app.use("/api/contract-upgrade", contractUpgradeRoutes);
 
 // Mount conversion analytics routes (path payment analytics and cost basis tracking)
-app.use("/api/conversions", conversionAnalyticsRoutes);
+app.use("/api/conversion-analytics", conversionAnalyticsRoutes);
 
 // Mount TVL-price correlation analysis routes
 app.use("/api/correlation", correlationRoutes);
