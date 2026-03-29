@@ -76,6 +76,7 @@ const models = {
   CertifiedBuild,
   ConversionEvent,
   MilestoneCelebrationWebhook,
+  LoyaltyBadge,
   sequelize,
 };
 
