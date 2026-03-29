@@ -164,6 +164,59 @@ const vaultRegistryIndexingJob = require("./jobs/vaultRegistryIndexingJob");
 const stellarPathPaymentListener = require("./services/stellarPathPaymentListener");
 const batchRevocationService = require("./services/batchRevocationService");
 
+const KycStatus = require("./KycStatus");
+const KycNotification = require("./KycNotification");
+const ContractUpgradeProposal = require("./contractUpgradeProposal");
+const ContractUpgradeSignature = require("./contractUpgradeSignature");
+const ContractUpgradeAuditLog = require("./contractUpgradeAuditLog");
+const CertifiedBuild = require("./certifiedBuild");
+const ConversionEvent = require("./conversionEvent");
+const MilestoneCelebrationWebhook = require("./milestoneCelebrationWebhook");
+const {
+  Token,
+  initTokenModel
+} = require("./token");
+
+const models = {
+  ClaimsHistory,
+  Vault,
+  SubSchedule,
+  TVL,
+  Beneficiary,
+  Organization,
+  Notification,
+  RefreshToken,
+  RevocationProposal,
+  RevocationSignature,
+  MultiSigConfig,
+  DividendRound,
+  DividendDistribution,
+  DividendSnapshot,
+  DeviceToken,
+  VaultLegalDocument,
+  VaultLiquidityAlert,
+  AnnualVestingStatement,
+  VestingMilestone,
+  HistoricalTokenPrice,
+  HistoricalTVL,
+  CostBasisReport,
+  AuditorToken,
+  VaultRegistry,
+  Rule144Compliance,
+  TaxCalculation,
+  TaxJurisdiction,
+  KycStatus,
+  KycNotification,
+  ContractUpgradeProposal,
+  ContractUpgradeSignature,
+  ContractUpgradeAuditLog,
+  CertifiedBuild,
+  ConversionEvent,
+  MilestoneCelebrationWebhook,
+  Token,
+  sequelize
+}; initTokenModel
+
 // Import webhooks routes
 const webhooksRoutes = require("./routes/webhooks");
 const organizationRoutes = require("./routes/organization");
@@ -174,7 +227,7 @@ const vaultRegistryRoutes = require("./routes/vaultRegistry");
 const contractUpgradeRoutes = require("./routes/contractUpgrade");
 const conversionAnalyticsRoutes = require("./routes/conversionAnalytics");
 const correlationRoutes = require("./routes/correlationRoutes");
-const unlockVolumeRoutes = require("./routes/unlockVolumeRoutes");
+const kycStatusRoutes = require("./routes/kycStatusRoutes");
 
 app.get("/", (req, res) => {
   res.json({ message: "Vesting Vault API is running!" });
@@ -402,8 +455,8 @@ app.use("/api/conversion-analytics", conversionAnalyticsRoutes);
 // Mount TVL-price correlation analysis routes
 app.use("/api/correlation", correlationRoutes);
 
-// Mount unlock volume routes
-app.use("/api/unlock-volume", unlockVolumeRoutes);
+// Mount KYC status management routes
+app.use("/api/kyc-status", kycStatusRoutes);
 
 // Historical price tracking job management endpoints
 app.post("/api/admin/jobs/historical-prices/start", async (req, res) => {
