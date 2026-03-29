@@ -227,7 +227,7 @@ const vaultRegistryRoutes = require("./routes/vaultRegistry");
 const contractUpgradeRoutes = require("./routes/contractUpgrade");
 const conversionAnalyticsRoutes = require("./routes/conversionAnalytics");
 const correlationRoutes = require("./routes/correlationRoutes");
-const kycStatusRoutes = require("./routes/kycStatusRoutes");
+const futureLienRoutes = require("./routes/futureLienRoutes");
 
 app.get("/", (req, res) => {
   res.json({ message: "Vesting Vault API is running!" });
@@ -455,8 +455,8 @@ app.use("/api/conversion-analytics", conversionAnalyticsRoutes);
 // Mount TVL-price correlation analysis routes
 app.use("/api/correlation", correlationRoutes);
 
-// Mount KYC status management routes
-app.use("/api/kyc-status", kycStatusRoutes);
+// Mount vesting-to-grant-stream integration routes
+app.use("/api", futureLienRoutes);
 
 // Historical price tracking job management endpoints
 app.post("/api/admin/jobs/historical-prices/start", async (req, res) => {

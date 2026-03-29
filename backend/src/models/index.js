@@ -33,8 +33,18 @@ const ContractUpgradeProposal = require("./contractUpgradeProposal");
 const CertifiedBuild = require("./certifiedBuild");
 const ConversionEvent = require("./conversionEvent");
 const MilestoneCelebrationWebhook = require("./milestoneCelebrationWebhook");
-const Token = require("./token");
-const OrganizationWebhook = require("./organizationWebhook");
+const GrantStream = require("./grantStream");
+const FutureLien = require("./futureLien");
+const LienRelease = require("./lienRelease");
+const LienMilestone = require("./lienMilestone");
+
+const { Token, initTokenModel } = require("./token");
+const {
+  OrganizationWebhook,
+  initOrganizationWebhookModel,
+} = require("./organizationWebhook");
+
+initTokenModel(sequelize);
 
 initOrganizationWebhookModel(sequelize);
 
@@ -76,7 +86,10 @@ const models = {
   CertifiedBuild,
   ConversionEvent,
   MilestoneCelebrationWebhook,
-  LoyaltyBadge,
+  GrantStream,
+  FutureLien,
+  LienRelease,
+  LienMilestone,
   sequelize,
 };
 
